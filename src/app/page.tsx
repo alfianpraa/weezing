@@ -5,6 +5,11 @@ import Row from "@/components/Row";
 import TrackTable from "@/components/TrackTable";
 import { PlusCircleIcon } from "@/components/icons";
 
+// The song catalog changes at runtime (admin uploads), so this can't be
+// statically prerendered at build time — it would freeze at whatever
+// existed when `docker build` ran (usually nothing).
+export const dynamic = "force-dynamic";
+
 function getGreeting() {
   const hour = new Date().getHours();
   if (hour < 12) return "Good morning";
