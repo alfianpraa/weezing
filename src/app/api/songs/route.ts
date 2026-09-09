@@ -1,21 +1,18 @@
 import { NextResponse } from "next/server";
-import path from "node:path";
-import fs from "node:fs/promises";
 import crypto from "node:crypto";
-import { parseBlob } from "music-metadata";
-import { addSong, readSongs, AUDIO_DIR, COVER_DIR, MEDIA_URL_PREFIX } from "@/lib/songStore";
+import { addSong, readSongs } from "@/lib/songStore";
 import { DEFAULT_COVER } from "@/lib/constants";
+import { isAdminRequest } from "@/lib/adminAuth";
+import {
+  UploadValidationError,
+  saveAudioFile,
+  saveCoverFile,
+  validateAudioFile,
+  validateCoverFile,
+} from "@/lib/mediaUpload";
 import type { SongRecord } from "@/lib/types";
 
 export const runtime = "nodejs";
-
-const MAX_AUDIO_BYTES = 30 * 1024 * 1024; // 30MB
-const MAX_COVER_BYTES = 5 * 1024 * 1024; // 5MB
-
-function extFromName(name: string, fallback: string): string {
-  const ext = path.extname(name);
-  return ext ? ext : fallback;
-}
 
 export async function GET() {
   const songs = await readSongs();
@@ -26,6 +23,10 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  if (!isAdminRequest(request)) {
+    return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
+  }
+
   const form = await request.formData();
 
   const title = String(form.get("title") ?? "").trim();
@@ -35,55 +36,24 @@ export async function POST(request: Request) {
   const cover = form.get("cover");
 
   if (!title || !artist) {
-    return NextResponse.json({ error: "Title and artist are required." }, { status: 400 });
-  }
-  if (!(audio instanceof File) || audio.size === 0) {
-    return NextResponse.json({ error: "An audio file is required." }, { status: 400 });
-  }
-  if (!audio.type.startsWith("audio/")) {
-    return NextResponse.json({ error: "The uploaded file must be an audio file." }, { status: 400 });
-  }
-  if (audio.size > MAX_AUDIO_BYTES) {
-    return NextResponse.json({ error: "Audio file must be 30MB or smaller." }, { status: 400 });
-  }
-  if (cover instanceof File && cover.size > 0) {
-    if (!cover.type.startsWith("image/")) {
-      return NextResponse.json({ error: "Cover must be an image file." }, { status: 400 });
-    }
-    if (cover.size > MAX_COVER_BYTES) {
-      return NextResponse.json({ error: "Cover image must be 5MB or smaller." }, { status: 400 });
-    }
+    return NextResponse.json({ error: "Judul dan artis wajib diisi." }, { status: 400 });
   }
 
-  const id = crypto.randomUUID();
-
-  let duration = 0;
   try {
-    const metadata = await parseBlob(audio);
-    duration = Math.round(metadata.format.duration ?? 0);
-  } catch {
-    duration = 0;
+    validateAudioFile(audio);
+    validateCoverFile(cover);
+  } catch (err) {
+    if (err instanceof UploadValidationError) {
+      return NextResponse.json({ error: err.message }, { status: 400 });
+    }
+    throw err;
   }
 
-  const audioExt = extFromName(audio.name, ".mp3");
-  const audioFileName = `${id}${audioExt}`;
-  const audioBuffer = Buffer.from(await audio.arrayBuffer());
-  await fs.mkdir(AUDIO_DIR, { recursive: true });
-  await fs.writeFile(path.join(AUDIO_DIR, audioFileName), audioBuffer);
-  const audioUrl = `${MEDIA_URL_PREFIX}/audio/${audioFileName}`;
-
-  let coverUrl = DEFAULT_COVER;
-  if (cover instanceof File && cover.size > 0) {
-    const coverExt = extFromName(cover.name, ".jpg");
-    const coverFileName = `${id}${coverExt}`;
-    const coverBuffer = Buffer.from(await cover.arrayBuffer());
-    await fs.mkdir(COVER_DIR, { recursive: true });
-    await fs.writeFile(path.join(COVER_DIR, coverFileName), coverBuffer);
-    coverUrl = `${MEDIA_URL_PREFIX}/covers/${coverFileName}`;
-  }
+  const { url: audioUrl, duration } = await saveAudioFile(audio);
+  const coverUrl = cover instanceof File && cover.size > 0 ? await saveCoverFile(cover) : DEFAULT_COVER;
 
   const song: SongRecord = {
-    id,
+    id: crypto.randomUUID(),
     title,
     artist,
     album: albumInput || title,

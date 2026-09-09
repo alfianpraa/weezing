@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { usePlayer } from "@/context/PlayerContext";
-import { HomeIcon, LibraryIcon, PlusCircleIcon, SearchIcon, HeartIcon } from "./icons";
+import { HomeIcon, LibraryIcon, SearchIcon, HeartIcon } from "./icons";
 
 function NavLink({ href, icon, label }: { href: string; icon: React.ReactNode; label: string }) {
   const pathname = usePathname();
@@ -42,18 +42,11 @@ export default function Sidebar() {
       </div>
 
       <div className="flex flex-1 flex-col overflow-hidden rounded-lg bg-zinc-900">
-        <div className="flex items-center justify-between px-4 pt-4">
+        <div className="flex items-center px-4 pt-4">
           <span className="flex items-center gap-3 text-sm font-semibold text-zinc-400">
             <LibraryIcon className="h-6 w-6" />
             Your Library
           </span>
-          <Link
-            href="/admin"
-            aria-label="Upload a song"
-            className="rounded-full p-1 text-zinc-400 transition-colors hover:text-white"
-          >
-            <PlusCircleIcon className="h-5 w-5" />
-          </Link>
         </div>
 
         <div className="mt-2 flex-1 overflow-y-auto px-2 pb-4">
@@ -68,16 +61,6 @@ export default function Sidebar() {
               <span className="truncate font-medium text-white">Liked Songs</span>
               <span className="truncate text-xs text-zinc-400">{likedIds.size} songs</span>
             </span>
-          </Link>
-
-          <Link
-            href="/admin"
-            className="mt-2 flex items-center gap-3 rounded-md p-2 text-zinc-400 transition-colors hover:bg-white/10 hover:text-white"
-          >
-            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded border border-dashed border-zinc-600">
-              <PlusCircleIcon className="h-5 w-5" />
-            </span>
-            <span className="text-sm font-medium">Upload a song</span>
           </Link>
         </div>
       </div>

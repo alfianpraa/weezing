@@ -1,8 +1,9 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { ChevronLeftIcon, ChevronRightIcon, SearchIcon } from "./icons";
+import { ChevronLeftIcon, ChevronRightIcon, SearchIcon, ShieldIcon } from "./icons";
 
 export default function TopBar() {
   const router = useRouter();
@@ -53,9 +54,19 @@ export default function TopBar() {
         </div>
       </div>
 
-      <button className="flex h-8 w-8 items-center justify-center rounded-full bg-zinc-700 text-xs font-bold text-white">
-        U
-      </button>
+      <div className="flex items-center gap-3">
+        <Link
+          href="/admin"
+          aria-label="Admin"
+          title="Admin"
+          className="flex h-8 w-8 items-center justify-center rounded-full bg-zinc-800 text-zinc-300 transition hover:bg-zinc-700 hover:text-white"
+        >
+          <ShieldIcon className="h-4 w-4" />
+        </Link>
+        <button className="flex h-8 w-8 items-center justify-center rounded-full bg-zinc-700 text-xs font-bold text-white">
+          U
+        </button>
+      </div>
     </header>
   );
 }

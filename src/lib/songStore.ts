@@ -37,6 +37,11 @@ export async function readSongs(): Promise<SongRecord[]> {
   }
 }
 
+export async function getSongById(id: string): Promise<SongRecord | null> {
+  const songs = await readSongs();
+  return songs.find((s) => s.id === id) ?? null;
+}
+
 async function writeSongs(songs: SongRecord[]): Promise<void> {
   await ensureStore();
   await fs.writeFile(SONGS_FILE, JSON.stringify(songs, null, 2), "utf-8");
@@ -48,6 +53,25 @@ export async function addSong(song: SongRecord): Promise<void> {
   await writeSongs(songs);
 }
 
+export async function updateSong(id: string, updates: Partial<Omit<SongRecord, "id">>): Promise<SongRecord | null> {
+  const songs = await readSongs();
+  const index = songs.findIndex((s) => s.id === id);
+  if (index === -1) return null;
+  const updated = { ...songs[index], ...updates };
+  songs[index] = updated;
+  await writeSongs(songs);
+  return updated;
+}
+
+// Deletes an uploaded file given the URL stored on a SongRecord. No-op for
+// non-uploaded values (e.g. the default cover placeholder).
+export async function deleteUploadedFile(fileUrl: string): Promise<void> {
+  if (!fileUrl.startsWith(`${MEDIA_URL_PREFIX}/`)) return;
+  const relative = fileUrl.slice(MEDIA_URL_PREFIX.length + 1);
+  const abs = path.join(UPLOAD_ROOT, relative);
+  await fs.unlink(abs).catch(() => {});
+}
+
 export async function deleteSong(id: string): Promise<SongRecord | null> {
   const songs = await readSongs();
   const index = songs.findIndex((s) => s.id === id);
@@ -55,12 +79,8 @@ export async function deleteSong(id: string): Promise<SongRecord | null> {
   const [removed] = songs.splice(index, 1);
   await writeSongs(songs);
 
-  for (const fileUrl of [removed.audioUrl, removed.cover]) {
-    if (!fileUrl.startsWith(`${MEDIA_URL_PREFIX}/`)) continue;
-    const relative = fileUrl.slice(MEDIA_URL_PREFIX.length + 1);
-    const abs = path.join(UPLOAD_ROOT, relative);
-    await fs.unlink(abs).catch(() => {});
-  }
+  await deleteUploadedFile(removed.audioUrl);
+  await deleteUploadedFile(removed.cover);
 
   return removed;
 }

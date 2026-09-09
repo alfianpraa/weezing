@@ -14,3 +14,4 @@ services:
       - ./uploads:/app/uploads
     environment:
       - NODE_ENV=production
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:?Set ADMIN_PASSWORD in a .env file next to docker-compose.yml}
