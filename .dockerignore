@@ -1,0 +1,9 @@
+node_modules
+.next
+.git
+data
+public/uploads
+npm-debug.log*
+*.tsbuildinfo
+.env*
+README.md

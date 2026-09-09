@@ -1,0 +1,16 @@
+services:
+  web:
+    build: .
+    image: wavelength-music-app:latest
+    container_name: wavelength-music-app
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    volumes:
+      # Persist the song catalog (JSON "database") and uploaded files across
+      # image rebuilds/updates — without these, `docker compose up --build`
+      # would wipe every uploaded song.
+      - ./data:/app/data
+      - ./uploads:/app/public/uploads
+    environment:
+      - NODE_ENV=production
