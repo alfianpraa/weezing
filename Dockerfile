@@ -20,14 +20,16 @@ ENV HOSTNAME=0.0.0.0
 RUN addgroup --system --gid 1001 nodejs \
   && adduser --system --uid 1001 nextjs
 
-# Static assets (default-cover.svg, favicon, etc.) — uploads volume mounts over
-# public/uploads at runtime, see docker-compose.yml.
+# Static assets (default-cover.svg, favicon, etc.) baked at build time.
+# Uploaded audio/covers live outside public/ (see src/lib/songStore.ts) and
+# are served live via /api/media — the uploads volume mounts over /app/uploads,
+# see docker-compose.yml.
 COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-RUN mkdir -p /app/data /app/public/uploads/audio /app/public/uploads/covers \
-  && chown -R nextjs:nodejs /app/data /app/public/uploads
+RUN mkdir -p /app/data /app/uploads/audio /app/uploads/covers \
+  && chown -R nextjs:nodejs /app/data /app/uploads
 
 USER nextjs
 EXPOSE 3000

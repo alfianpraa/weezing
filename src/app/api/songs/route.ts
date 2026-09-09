@@ -3,7 +3,7 @@ import path from "node:path";
 import fs from "node:fs/promises";
 import crypto from "node:crypto";
 import { parseBlob } from "music-metadata";
-import { addSong, readSongs, AUDIO_DIR, COVER_DIR } from "@/lib/songStore";
+import { addSong, readSongs, AUDIO_DIR, COVER_DIR, MEDIA_URL_PREFIX } from "@/lib/songStore";
 import { DEFAULT_COVER } from "@/lib/constants";
 import type { SongRecord } from "@/lib/types";
 
@@ -70,7 +70,7 @@ export async function POST(request: Request) {
   const audioBuffer = Buffer.from(await audio.arrayBuffer());
   await fs.mkdir(AUDIO_DIR, { recursive: true });
   await fs.writeFile(path.join(AUDIO_DIR, audioFileName), audioBuffer);
-  const audioUrl = `/uploads/audio/${audioFileName}`;
+  const audioUrl = `${MEDIA_URL_PREFIX}/audio/${audioFileName}`;
 
   let coverUrl = DEFAULT_COVER;
   if (cover instanceof File && cover.size > 0) {
@@ -79,7 +79,7 @@ export async function POST(request: Request) {
     const coverBuffer = Buffer.from(await cover.arrayBuffer());
     await fs.mkdir(COVER_DIR, { recursive: true });
     await fs.writeFile(path.join(COVER_DIR, coverFileName), coverBuffer);
-    coverUrl = `/uploads/covers/${coverFileName}`;
+    coverUrl = `${MEDIA_URL_PREFIX}/covers/${coverFileName}`;
   }
 
   const song: SongRecord = {

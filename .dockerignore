@@ -2,7 +2,7 @@ node_modules
 .next
 .git
 data
-public/uploads
+uploads
 npm-debug.log*
 *.tsbuildinfo
 .env*

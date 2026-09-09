@@ -11,6 +11,6 @@ services:
       # image rebuilds/updates — without these, `docker compose up --build`
       # would wipe every uploaded song.
       - ./data:/app/data
-      - ./uploads:/app/public/uploads
+      - ./uploads:/app/uploads
     environment:
       - NODE_ENV=production
