@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Wavelength — Music for everyone",
+  title: "Weezing — Music for everyone",
   description: "A Spotify-inspired music streaming demo built with Next.js.",
 };
 

@@ -1,8 +1,8 @@
 services:
   web:
     build: .
-    image: wavelength-music-app:latest
-    container_name: wavelength-music-app
+    image: weezing:latest
+    container_name: weezing
     restart: unless-stopped
     ports:
       - "3000:3000"
