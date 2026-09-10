@@ -26,24 +26,24 @@ export default function TopBar() {
   }
 
   return (
-    <header className="sticky top-0 z-20 flex items-center justify-between gap-4 bg-black/40 px-6 py-3 backdrop-blur-md">
-      <div className="flex items-center gap-3">
+    <header className="sticky top-0 z-20 flex items-center justify-between gap-3 bg-black/40 px-4 py-3 backdrop-blur-md sm:gap-4 sm:px-6">
+      <div className="flex min-w-0 flex-1 items-center gap-3 sm:flex-initial">
         <button
           onClick={() => router.back()}
           aria-label="Go back"
-          className="flex h-8 w-8 items-center justify-center rounded-full bg-black/60 text-white transition hover:bg-black/80"
+          className="hidden h-8 w-8 items-center justify-center rounded-full bg-black/60 text-white transition hover:bg-black/80 sm:flex"
         >
           <ChevronLeftIcon className="h-5 w-5" />
         </button>
         <button
           onClick={() => router.forward()}
           aria-label="Go forward"
-          className="flex h-8 w-8 items-center justify-center rounded-full bg-black/60 text-white transition hover:bg-black/80"
+          className="hidden h-8 w-8 items-center justify-center rounded-full bg-black/60 text-white transition hover:bg-black/80 sm:flex"
         >
           <ChevronRightIcon className="h-5 w-5" />
         </button>
 
-        <div className="relative ml-2 w-72">
+        <div className="relative w-full sm:ml-2 sm:w-72">
           <SearchIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" />
           <input
             value={query}
@@ -54,7 +54,7 @@ export default function TopBar() {
         </div>
       </div>
 
-      <div className="flex items-center gap-3">
+      <div className="flex shrink-0 items-center gap-3">
         <Link
           href="/admin"
           aria-label="Admin"

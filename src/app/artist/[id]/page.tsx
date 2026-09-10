@@ -17,11 +17,11 @@ export default async function ArtistPage({ params }: { params: Promise<{ id: str
 
   return (
     <div>
-      <div className="relative flex h-72 items-end overflow-hidden rounded-b-lg sm:h-96">
+      <div className="relative flex h-56 items-end overflow-hidden rounded-b-lg sm:h-96">
         <Image src={artist.image} alt={artist.name} fill priority className="object-cover" />
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-black/40" />
         <div className="relative z-10 px-2 pb-6 sm:px-4">
-          <h1 className="text-4xl font-extrabold text-white drop-shadow sm:text-7xl">{artist.name}</h1>
+          <h1 className="text-3xl font-extrabold text-white drop-shadow sm:text-5xl lg:text-7xl">{artist.name}</h1>
           <p className="mt-3 text-sm text-zinc-200">
             {artist.trackCount} {artist.trackCount === 1 ? "song" : "songs"}
           </p>

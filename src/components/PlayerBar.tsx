@@ -38,11 +38,21 @@ export default function PlayerBar() {
   } = usePlayer();
 
   const liked = current ? likedIds.has(current.id) : false;
+  const progressPct = duration > 0 ? Math.min(100, (progress / duration) * 100) : 0;
 
   return (
-    <div className="flex h-24 shrink-0 items-center gap-4 border-t border-zinc-800 bg-zinc-950 px-4">
+    <div
+      className={`relative h-16 shrink-0 items-center gap-3 border-t border-zinc-800 bg-zinc-950 px-3 md:h-24 md:gap-4 md:px-4 ${
+        current ? "flex" : "hidden md:flex"
+      }`}
+    >
+      {/* Mobile progress line */}
+      <div className="absolute inset-x-0 top-0 h-0.5 bg-zinc-800 md:hidden">
+        <div className="h-full bg-accent" style={{ width: `${progressPct}%` }} />
+      </div>
+
       {/* Now playing */}
-      <div className="flex w-1/4 min-w-0 items-center gap-3">
+      <div className="flex min-w-0 flex-1 items-center gap-3 md:w-1/4 md:flex-initial">
         {current ? (
           <>
             <Image
@@ -50,7 +60,7 @@ export default function PlayerBar() {
               alt={current.album}
               width={56}
               height={56}
-              className="h-14 w-14 shrink-0 rounded object-cover"
+              className="h-11 w-11 shrink-0 rounded object-cover md:h-14 md:w-14"
             />
             <div className="min-w-0">
               <Link
@@ -80,23 +90,27 @@ export default function PlayerBar() {
       </div>
 
       {/* Controls */}
-      <div className="flex w-1/2 flex-col items-center gap-2">
-        <div className="flex items-center gap-5">
+      <div className="flex shrink-0 items-center gap-4 md:w-1/2 md:flex-col md:gap-2">
+        <div className="flex items-center gap-4 md:gap-5">
           <button
             onClick={toggleShuffle}
             aria-label="Toggle shuffle"
-            className={`transition-colors ${shuffle ? "text-accent" : "text-zinc-400 hover:text-white"}`}
+            className={`hidden transition-colors md:block ${shuffle ? "text-accent" : "text-zinc-400 hover:text-white"}`}
           >
             <ShuffleIcon className="h-4 w-4" />
           </button>
-          <button onClick={prev} aria-label="Previous" className="text-zinc-300 hover:text-white">
+          <button
+            onClick={prev}
+            aria-label="Previous"
+            className="hidden text-zinc-300 hover:text-white md:block"
+          >
             <SkipBackIcon className="h-5 w-5" />
           </button>
           <button
             onClick={togglePlay}
             disabled={!current}
             aria-label={isPlaying ? "Pause" : "Play"}
-            className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-black transition hover:scale-105 disabled:opacity-40"
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-black transition hover:scale-105 disabled:opacity-40 md:h-8 md:w-8"
           >
             {isPlaying ? <PauseIcon className="h-4 w-4" /> : <PlayIcon className="h-4 w-4 translate-x-[1px]" />}
           </button>
@@ -106,12 +120,12 @@ export default function PlayerBar() {
           <button
             onClick={cycleRepeat}
             aria-label="Toggle repeat"
-            className={`transition-colors ${repeatMode !== "off" ? "text-accent" : "text-zinc-400 hover:text-white"}`}
+            className={`hidden transition-colors md:block ${repeatMode !== "off" ? "text-accent" : "text-zinc-400 hover:text-white"}`}
           >
             {repeatMode === "one" ? <RepeatOneIcon className="h-4 w-4" /> : <RepeatIcon className="h-4 w-4" />}
           </button>
         </div>
-        <div className="flex w-full items-center gap-2 text-xs text-zinc-400">
+        <div className="hidden w-full items-center gap-2 text-xs text-zinc-400 md:flex">
           <span className="w-10 text-right">{formatTime(progress)}</span>
           <input
             type="range"
@@ -126,8 +140,8 @@ export default function PlayerBar() {
         </div>
       </div>
 
-      {/* Volume */}
-      <div className="flex w-1/4 items-center justify-end gap-2">
+      {/* Volume (desktop only) */}
+      <div className="hidden w-1/4 items-center justify-end gap-2 md:flex">
         <button
           onClick={() => setVolume(volume === 0 ? 0.8 : 0)}
           aria-label="Toggle mute"

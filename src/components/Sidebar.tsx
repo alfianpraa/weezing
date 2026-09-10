@@ -25,7 +25,7 @@ export default function Sidebar() {
   const { likedIds } = usePlayer();
 
   return (
-    <aside className="flex w-60 shrink-0 flex-col gap-2 bg-black p-2 text-sm">
+    <aside className="hidden w-60 shrink-0 flex-col gap-2 bg-black p-2 text-sm md:flex">
       <div className="rounded-lg bg-zinc-900 p-4">
         <Link href="/" className="mb-6 flex items-center gap-2 px-1 text-xl font-extrabold tracking-tight text-white">
           <span className="flex h-8 w-8 items-center justify-center rounded-full bg-accent text-black">

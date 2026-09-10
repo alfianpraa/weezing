@@ -20,11 +20,11 @@ export default function TrackTable({
     <table className="w-full border-collapse text-left text-sm">
       <thead>
         <tr className="border-b border-zinc-800 text-xs uppercase tracking-wide text-zinc-400">
-          <th className="w-12 px-4 py-2 text-right font-normal">#</th>
+          <th className="w-10 px-2 py-2 text-right font-normal sm:w-12 sm:px-4">#</th>
           <th className="px-2 py-2 font-normal">Title</th>
           {showAlbum && <th className="hidden px-2 py-2 font-normal md:table-cell">Album</th>}
-          <th className="w-12 px-2 py-2 font-normal"></th>
-          <th className="w-16 px-4 py-2 text-right font-normal">
+          <th className="w-10 px-2 py-2 font-normal"></th>
+          <th className="w-14 px-2 py-2 text-right font-normal sm:w-16 sm:px-4">
             <span className="inline-block">⏱</span>
           </th>
         </tr>
@@ -44,7 +44,7 @@ export default function TrackTable({
 
           return (
             <tr key={`${track.id}-${index}`} className="group rounded-md hover:bg-white/10">
-              <td className="w-12 px-4 py-2 text-right">
+              <td className="w-10 px-2 py-2 text-right sm:w-12 sm:px-4">
                 <button
                   onClick={handleRowPlay}
                   aria-label={isCurrent && isPlaying ? "Pause" : "Play"}
@@ -106,14 +106,14 @@ export default function TrackTable({
                 <button
                   onClick={() => toggleLike(track.id)}
                   aria-label={liked ? "Unlike" : "Like"}
-                  className={`opacity-0 transition-opacity group-hover:opacity-100 ${
-                    liked ? "text-accent opacity-100" : "text-zinc-400 hover:text-white"
+                  className={`transition-opacity md:opacity-0 md:group-hover:opacity-100 ${
+                    liked ? "text-accent md:opacity-100" : "text-zinc-400 hover:text-white"
                   }`}
                 >
                   <HeartIcon filled={liked} className="h-4 w-4" />
                 </button>
               </td>
-              <td className="px-4 py-2 text-right text-zinc-400">{formatTime(track.duration)}</td>
+              <td className="px-2 py-2 text-right text-zinc-400 sm:px-4">{formatTime(track.duration)}</td>
             </tr>
           );
         })}

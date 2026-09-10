@@ -32,7 +32,7 @@ export default async function Home() {
       <h1 className="mb-6 text-3xl font-bold text-white">{getGreeting()}</h1>
 
       {tracks.length === 0 ? (
-        <div className="flex flex-col items-center gap-4 rounded-lg border border-dashed border-zinc-700 px-6 py-16 text-center">
+        <div className="flex flex-col items-center gap-4 rounded-lg border border-dashed border-zinc-700 px-4 py-12 text-center sm:px-6 sm:py-16">
           <p className="text-lg font-semibold text-white">Belum ada lagu di perpustakaan</p>
           <p className="max-w-md text-sm text-zinc-400">
             Upload lagu pertamamu lewat halaman Admin supaya bisa langsung diputar di sini.

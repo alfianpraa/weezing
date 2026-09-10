@@ -224,14 +224,14 @@ function AdminDashboard({ onLoggedOut }: { onLoggedOut: () => void }) {
 
   return (
     <div className="pt-6 pb-10">
-      <div className="mb-8 flex items-center justify-between">
+      <div className="mb-8 flex flex-wrap items-start justify-between gap-3">
         <div>
           <h1 className="text-3xl font-bold text-white">Admin</h1>
           <p className="text-sm text-zinc-400">Kelola lagu yang bisa diputar semua pengguna.</p>
         </div>
         <button
           onClick={handleLogout}
-          className="rounded-full border border-zinc-700 px-4 py-1.5 text-sm text-zinc-300 transition hover:bg-zinc-800 hover:text-white"
+          className="shrink-0 rounded-full border border-zinc-700 px-4 py-1.5 text-sm text-zinc-300 transition hover:bg-zinc-800 hover:text-white"
         >
           Logout
         </button>
@@ -362,8 +362,8 @@ function AdminSongList({
   const tracks = songs.map(toTrack);
 
   return (
-    <div className="overflow-hidden rounded-lg border border-zinc-800">
-      <table className="w-full border-collapse text-left text-sm">
+    <div className="overflow-x-auto rounded-lg border border-zinc-800">
+      <table className="w-full min-w-[520px] border-collapse text-left text-sm">
         <thead>
           <tr className="border-b border-zinc-800 text-xs uppercase tracking-wide text-zinc-400">
             <th className="w-12 px-4 py-2"></th>
